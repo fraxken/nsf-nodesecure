@@ -1,0 +1,27 @@
+{
+  "name": "sqlite-jsxray",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./dist && tsc"
+  },
+  "keywords": [],
+  "author": "GENTILHOMME Thomas <gentilhomme.thomas@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.3",
+    "@types/node": "^18.11.18",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@myunisoft/utils": "^2.8.0",
+    "@nodesecure/js-x-ray": "^5.1.0",
+    "@nodesecure/scanner": "^3.8.0",
+    "better-sqlite3": "^8.0.1",
+    "kleur": "^4.1.5"
+  }
+}
