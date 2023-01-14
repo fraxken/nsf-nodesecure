@@ -12,19 +12,23 @@ export interface WarningEntity {
   value: string | null;
   severity: string;
   file: string | null;
+  unpkg: string | null;
 }
 
 export class Warning extends SQLEntity<WarningEntity> {
-  static convertSastWarning(warning: any, name: string): WarningEntity {
+  static convertSastWarning(warning: any, packageName: string): WarningEntity {
+    const file = warning?.file ?? null;
+
     return {
-      package: name,
+      package: packageName,
       kind: warning.kind,
       location: utils.locationToString(
         warning.kind === "encoded-literal" ? warning.location[0] : warning.location
       ),
       value: warning?.value ?? null,
       severity: warning.severity ?? "Information",
-      file: warning?.file ?? null
+      file,
+      unpkg: file === null ? null : getUnpkgURL(file, packageName)
     };
   }
   
@@ -51,5 +55,18 @@ export class Warning extends SQLEntity<WarningEntity> {
       type: "VARCHAR(500)",
       nullable: true
     });
+    this.column("unpkg", {
+      type: "VARCHAR(500)",
+      nullable: true
+    });
   }
+}
+
+function getUnpkgURL(fileName: string, packageName: string): null | string {
+  if (fileName === "../" || fileName === "./") {
+    return null;
+  }
+  const cleanedFile = fileName.startsWith("./") ? fileName.slice(2) : fileName;
+
+  return `https://unpkg.com/${packageName}/${cleanedFile}`;
 }
