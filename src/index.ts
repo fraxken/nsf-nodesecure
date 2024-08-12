@@ -7,8 +7,7 @@ import sqlite from "better-sqlite3";
 import kleur from "kleur";
 import ms from "ms";
 
-// @ts-ignore
-import Spinner from "@topcli/spinner";
+import { Spinner } from "@topcli/spinner";
 import * as scanner from "@nodesecure/scanner";
 
 // Import Internal Dependencies
@@ -46,15 +45,15 @@ export async function run(ctx: Context, options: IRunOptions) {
 
   const coloredTerminalName = kleur.cyan().bold(name);
   const spin = new Spinner({
-    prefixText: `${kleur.yellow().bold(ctx.packageId++)} > ${coloredTerminalName}`,
-    spinner: "dots"
+    name: "dots"
   });
 
-  spin.start(kleur.white().bold(`scanning package`));
+  spin.start(kleur.white().bold(`scanning package`), {
+    withPrefix: `${kleur.yellow().bold(ctx.packageId++)} > ${coloredTerminalName}`
+  });
   try {
     const { ast } = await scanner.tarball.scanPackage(location, name);
 
-    // TODO: add missing type when scanner d.ts is fixed
     ctx.warning.insert(
       ast.warnings.map((warn: any) => Warning.convertSastWarning(warn, name))
     );
